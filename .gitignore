@@ -1,0 +1,87 @@
+# Claude Code
+.claude/
+CLAUDE.md
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+
+# Virtual envs
+.venv/
+venv/
+env/
+ENV/
+
+# Secrets & environment
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+secrets/
+# note: .env.example stays tracked
+
+# DuckDB (local database files — these can be huge and regenerable)
+*.duckdb
+*.duckdb.wal
+*.duckdb.tmp
+local.duckdb
+
+# dbt
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/logs/
+dbt_project/.user.yml
+
+# Airflow (running state — keep docker-compose.yml, requirements.txt tracked)
+airflow.db
+airflow.cfg
+airflow-webserver.pid
+webserver_config.py
+logs/
+dags/__pycache__/
+
+# MLflow (experiment tracking — the data, not the code)
+mlruns/
+mlartifacts/
+.mlflow/
+
+# Jupyter (for the weekend-5 heatmap draft notebook)
+.ipynb_checkpoints/
+*.nbconvert.ipynb
+
+# Streamlit (secrets only — keep .streamlit/config.toml tracked if it exists)
+.streamlit/secrets.toml
+
+# SHAP / model artifacts (regenerated each run)
+shap_values.json
+*.pkl
+*.joblib
+
+# Docker local overrides (keep docker-compose.yml tracked, ignore per-dev overrides)
+docker-compose.override.yml
+
+# Launchd (the plist itself stays tracked; ignore any runtime logs)
+launchd/*.log
+
+# IDEs & editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Misc
+*.log
+.coverage
+htmlcov/
