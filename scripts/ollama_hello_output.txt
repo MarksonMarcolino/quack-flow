@@ -1,0 +1,33 @@
+============================================================
+quack-flow Ollama hello-world  (llama3 @ http://localhost:11434)
+============================================================
+
+INPUT (fake SHAP context):
+{
+  "ticker": "MSFT",
+  "prediction": "UP in 7 days",
+  "confidence": 0.61,
+  "top_features": [
+    [
+      "commit_velocity_7d_python_repos",
+      0.18
+    ],
+    [
+      "star_growth_7d_ai_tagged",
+      0.11
+    ],
+    [
+      "pr_merge_rate_7d_azure_repos",
+      -0.07
+    ]
+  ]
+}
+
+OUTPUT (llama3):
+Our model is predicting that Microsoft's stock (MSFT) will increase within the next 7 days, based on a combination of GitHub activity metrics from the past week. The top features driving this prediction are commit velocity in Python repositories, star growth in AI-tagged projects, and pull request merge rate in Azure-repos. While these correlations may be intriguing, it's essential to note that we're not suggesting that these GitHub metrics directly cause stock price movements – we're simply observing associations.
+
+Caveat: This prediction does NOT imply that Microsoft's actual financial performance or market forces are directly influenced by
+
+============================================================
+Integration sanity check: PASS
+============================================================
