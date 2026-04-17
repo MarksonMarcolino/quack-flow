@@ -2,6 +2,9 @@
 .claude/
 CLAUDE.md
 
+# Local-only working notes
+IDEAS.md
+
 # Python
 __pycache__/
 *.py[cod]
