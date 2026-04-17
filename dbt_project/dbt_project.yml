@@ -1,0 +1,32 @@
+name: "quack_flow"
+version: "1.0.0"
+config-version: 2
+
+profile: "quack-flow"
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+  - "logs"
+
+# Medallion layout. Every model inherits its materialization + schema from
+# this tree unless it overrides. Bronze stays ephemeral (raw ingest lives
+# in DuckDB tables written by Airflow extractors, not dbt). Silver and Gold
+# are real tables; the rolling 30-day window lives in Bronze and is dropped
+# + reloaded daily by the extractors, outside dbt.
+models:
+  quack_flow:
+    silver:
+      +materialized: table
+      +schema: silver
+    gold:
+      +materialized: table
+      +schema: gold

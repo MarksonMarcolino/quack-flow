@@ -1,0 +1,20 @@
+# dbt profile for quack-flow.
+#
+# The profile name `quack-flow` matches the `profile:` key in dbt_project.yml.
+# Dev points at a local DuckDB file; prod points at MotherDuck. The hyphenated
+# database name `quack-flow-db` is wrapped in double quotes inside a single-
+# quoted YAML string so the quotes survive the path as DuckDB needs them.
+
+quack-flow:
+  outputs:
+    dev:
+      type: duckdb
+      path: ./local.duckdb
+      threads: 4
+
+    prod:
+      type: duckdb
+      path: 'md:"quack-flow-db"'
+      threads: 4
+
+  target: dev
