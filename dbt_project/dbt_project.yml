@@ -30,3 +30,16 @@ models:
     gold:
       +materialized: table
       +schema: gold
+
+# Seed configuration. The ticker_repos mapping is the authoritative source
+# for which GitHub repos feed which ticker's Target A signal. Silver/Gold
+# models JOIN against this seed to scope per-ticker features.
+seeds:
+  quack_flow:
+    +schema: reference
+    ticker_repos:
+      +column_types:
+        ticker: VARCHAR
+        repo_name: VARCHAR
+        role: VARCHAR
+        rationale: VARCHAR

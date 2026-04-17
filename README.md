@@ -52,15 +52,34 @@ where  z_α/2 = Φ⁻¹(1 − 0.000625/2) ≈ 3.42
 
 ## What quack-flow does
 
-1. **Ingests** GitHub Archive events (`WatchEvent` + `PullRequestEvent`, filtered to repos with ≥5 events/day) and Yahoo Finance OHLCV for `QQQ`, `AAPL`, `MSFT`, `GOOGL`, `META`. Rolling 30-day window in Bronze, drop-and-reload daily.
+1. **Ingests** GitHub Archive events (`WatchEvent` + `PullRequestEvent`) with two parallel scopes — a **curated per-ticker repo set** (23 repos total; see the mapping table below) that feeds the stock-direction hypothesis, and a broader ≥5-events/day filter that feeds the repo-trajectory model. Plus Yahoo Finance OHLCV for `QQQ`, `AAPL`, `MSFT`, `GOOGL`, `META`. Rolling 30-day window in Bronze, drop-and-reload daily.
 2. **Persists** a parallel append-only `training` schema with feature snapshots + continuous forward returns + binary labels — so the nightly rolling-window reload doesn't wipe training data.
 3. **Aligns** both signals on a shared time axis through a Bronze → Silver → Gold dbt medallion.
-4. **Measures** Spearman ρ between each GitHub signal and each ticker's daily log return at lags T+1, T+3, T+7, T+14, with Newey-West HAC standard errors and Bonferroni correction.
+4. **Measures** Spearman ρ between each *per-ticker* GitHub signal (aggregated over that ticker's curated repo set) and that ticker's daily log return at lags T+1, T+3, T+7, T+14, with Newey-West HAC standard errors and Bonferroni correction.
 5. **Predicts** two targets as supporting evidence:
    - **Stock direction** — will this ticker close higher in 7 days? (XGBoost, GitHub features + price controls.)
    - **Repo trajectory** — will this repo 2× its stars in 14 days? (XGBoost, GitHub features only.)
 6. **Explains** every prediction and every heatmap in plain English — Ollama (llama3, local) + SHAP top-3 feature attribution.
 7. **Shows** it on a 3-page Streamlit dashboard: correlation heatmap, stock predictions, repo predictions. Every cell shows n and whether it cleared Bonferroni.
+
+---
+
+## The ticker → repos mapping
+
+The hypothesis "does GitHub activity predict stock moves?" is untestable until you name *which* GitHub activity. This mapping is what makes the correlation claim falsifiable — a skeptical reader can argue with the choices below, which is exactly the kind of engagement this project wants.
+
+| Ticker | Repos | Role |
+|---|---|---|
+| **MSFT** | `microsoft/vscode`, `microsoft/TypeScript`, `microsoft/onnxruntime`, `microsoft/semantic-kernel` | owned |
+| **GOOGL** | `tensorflow/tensorflow`, `google/jax`, `google/gemma`, `golang/go` | owned |
+| **META** | `facebook/react`, `pytorch/pytorch`, `meta-llama/llama`, `facebookresearch/faiss` | owned |
+| **NVDA** | `NVIDIA/TensorRT`, `NVIDIA/NeMo`, `NVIDIA/cuda-python` | owned |
+| **AAPL** | `apple/swift`, `WebKit/WebKit`, `apple/ml-stable-diffusion` | owned |
+| **QQQ** | `huggingface/transformers`, `vercel/next.js`, `langchain-ai/langchain`, `apache/spark`, `moby/moby` | ecosystem |
+
+**23 repos total, 5 tickers + 1 index proxy.** The authoritative source is [`dbt_project/seeds/ticker_repos.csv`](dbt_project/seeds/ticker_repos.csv) — each row has a short `rationale` column explaining why that repo was chosen for that ticker. Edit the CSV and run `dbt seed` to change the mapping; never hardcode it in Python or SQL.
+
+**Known v1 limitation — NVDA.** NVIDIA is unusual because a lot of the relevant signal lives in *who* contributes to repos NVIDIA doesn't own (`pytorch/pytorch`, `openai/triton`). Building that requires reliable author→employer mapping from commit metadata, which public GitHub Archive events often don't surface cleanly. v1 scopes NVDA to owned repos only. Contributor-level signal is a documented v1.1 extension.
 
 ---
 
@@ -71,9 +90,12 @@ flowchart TB
     subgraph Ingestion
         GA[GitHub Archive<br/>WatchEvent + PR] -->|daily| B1
         YF[yfinance OHLCV<br/>QQQ + 4 tickers] -->|daily| B1
+        SEED[dbt seed<br/>reference.ticker_repos<br/>23 curated repos]
     end
 
-    B1[bronze schema<br/>30-day rolling] --> S1[silver<br/>typed + deduped] --> G1[gold<br/>aligned features]
+    B1[bronze schema<br/>30-day rolling] --> S1[silver<br/>typed + deduped]
+    SEED -.->|JOIN for Target A scope| S1
+    S1 --> G1[gold<br/>per-ticker + broad features]
 
     G1 --> TR[training schema<br/>APPEND-ONLY<br/>features + returns + labels]
     G1 --> EMB[features.text_embeddings<br/>v1.1]
@@ -90,7 +112,9 @@ flowchart TB
     OLL --> DASH[Streamlit dashboard<br/>3 pages]
 
     classDef heroStyle fill:#fffbe6,stroke:#c9a400,stroke-width:2px,color:#000
+    classDef seedStyle fill:#e6f7ff,stroke:#1890ff,stroke-width:2px,color:#000
     class COR,SC heroStyle
+    class SEED seedStyle
 ```
 
 The yellow path is the hero — correlation analysis writes into `serving.correlations`, which powers the dashboard's heatmap. Everything else supports it.
