@@ -37,6 +37,9 @@ secrets/
 *.duckdb.tmp
 local.duckdb
 
+# Bronze staging (extract-layer output, regenerable by re-running extract_*)
+bronze_staging/
+
 # dbt
 dbt_project/target/
 dbt_project/dbt_packages/
