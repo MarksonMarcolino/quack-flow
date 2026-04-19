@@ -1,24 +1,24 @@
 ticker,repo_name,role,rationale
-MSFT,microsoft/vscode,owned,Most-starred editor on GitHub. Activity here reflects Microsoft's developer-tooling investment pace.
-MSFT,microsoft/TypeScript,owned,Core language. Commit velocity tracks MS's language/tooling roadmap commitment.
-MSFT,microsoft/onnxruntime,owned,Cross-platform ML inference. Directly tied to Azure AI revenue line.
-MSFT,microsoft/semantic-kernel,owned,AI orchestration framework. Leading indicator for Copilot/Azure AI strategy.
-GOOGL,tensorflow/tensorflow,owned,Google Brain's training framework. Commit velocity reflects internal ML investment.
-GOOGL,google/jax,owned,Numpy-on-accelerators. Heavily used internally; activity here tracks DeepMind/AI priority.
-GOOGL,google/gemma,owned,Open-weight LLM series. Release cadence and star spikes correlate with AI product announcements.
-GOOGL,golang/go,owned,The Go language. Contributor/PR activity tracks Google's platform investment.
-META,facebook/react,owned,Dominant frontend framework. Activity tracks Meta's developer-ecosystem commitment.
-META,pytorch/pytorch,owned,The dominant ML training framework. Meta's crown jewel in open source.
-META,meta-llama/llama,owned,Open-weight LLM series. Star velocity on releases is a strong AI-strategy signal.
-META,facebookresearch/faiss,owned,Vector similarity library. Quiet but load-bearing — activity reflects AI infra investment.
-NVDA,NVIDIA/TensorRT,owned,Inference optimization engine. Commits here track NVIDIA's stack strategy beyond hardware.
-NVDA,NVIDIA/NeMo,owned,LLM training framework. Activity tracks their AI software moat.
-NVDA,NVIDIA/cuda-python,owned,Python CUDA bindings. Commit cadence reflects developer-surface investment.
-AAPL,apple/swift,owned,The Swift language. Activity is one of the few public windows into Apple's engineering cadence.
-AAPL,WebKit/WebKit,owned,Safari's browser engine. Commit velocity tracks web-platform priorities.
-AAPL,apple/ml-stable-diffusion,owned,Core ML diffusion models. Rare public signal on Apple's generative-AI stance.
-QQQ,huggingface/transformers,ecosystem,Pulse of the AI ecosystem. Ecosystem proxy, not a QQQ-owned repo.
-QQQ,vercel/next.js,ecosystem,Frontend ecosystem health. Ecosystem proxy.
-QQQ,langchain-ai/langchain,ecosystem,AI tooling adoption rate. Ecosystem proxy.
-QQQ,apache/spark,ecosystem,Data infrastructure activity. Ecosystem proxy.
-QQQ,moby/moby,ecosystem,Docker Engine source. Containerization ecosystem proxy.
+MSFT,microsoft/vscode,owned,"Most-starred editor on GitHub. Activity here reflects Microsoft's developer-tooling investment pace."
+MSFT,microsoft/TypeScript,owned,"Core language. Commit velocity tracks MS's language/tooling roadmap commitment."
+MSFT,microsoft/onnxruntime,owned,"Cross-platform ML inference. Directly tied to Azure AI revenue line."
+MSFT,microsoft/semantic-kernel,owned,"AI orchestration framework. Leading indicator for Copilot/Azure AI strategy."
+GOOGL,tensorflow/tensorflow,owned,"Google Brain's training framework. Commit velocity reflects internal ML investment."
+GOOGL,google/jax,owned,"Numpy-on-accelerators. Heavily used internally; activity here tracks DeepMind/AI priority."
+GOOGL,google/gemma,owned,"Open-weight LLM series. Release cadence and star spikes correlate with AI product announcements."
+GOOGL,golang/go,owned,"The Go language. Contributor/PR activity tracks Google's platform investment."
+META,facebook/react,owned,"Dominant frontend framework. Activity tracks Meta's developer-ecosystem commitment."
+META,pytorch/pytorch,owned,"The dominant ML training framework. Meta's crown jewel in open source."
+META,meta-llama/llama,owned,"Open-weight LLM series. Star velocity on releases is a strong AI-strategy signal."
+META,facebookresearch/faiss,owned,"Vector similarity library. Quiet but load-bearing — activity reflects AI infra investment."
+NVDA,NVIDIA/TensorRT,owned,"Inference optimization engine. Commits here track NVIDIA's stack strategy beyond hardware."
+NVDA,NVIDIA/NeMo,owned,"LLM training framework. Activity tracks their AI software moat."
+NVDA,NVIDIA/cuda-python,owned,"Python CUDA bindings. Commit cadence reflects developer-surface investment."
+AAPL,apple/swift,owned,"The Swift language. Activity is one of the few public windows into Apple's engineering cadence."
+AAPL,WebKit/WebKit,owned,"Safari's browser engine. Commit velocity tracks web-platform priorities."
+AAPL,apple/ml-stable-diffusion,owned,"Core ML diffusion models. Rare public signal on Apple's generative-AI stance."
+QQQ,huggingface/transformers,ecosystem,"Pulse of the AI ecosystem. Ecosystem proxy — not a QQQ-owned repo."
+QQQ,vercel/next.js,ecosystem,"Frontend ecosystem health. Ecosystem proxy."
+QQQ,langchain-ai/langchain,ecosystem,"AI tooling adoption rate. Ecosystem proxy."
+QQQ,apache/spark,ecosystem,"Data infrastructure activity. Ecosystem proxy."
+QQQ,moby/moby,ecosystem,"Docker Engine source. Containerization ecosystem proxy."

@@ -22,14 +22,17 @@ clean-targets:
 # in DuckDB tables written by Airflow extractors, not dbt). Silver and Gold
 # are real tables; the rolling 30-day window lives in Bronze and is dropped
 # + reloaded daily by the extractors, outside dbt.
-models:
-  quack_flow:
-    silver:
-      +materialized: table
-      +schema: silver
-    gold:
-      +materialized: table
-      +schema: gold
+# Silver/Gold materialization config is added in weekend 3-4 when those
+# models actually exist. Leaving it in now produces a warning on every
+# `dbt seed` run because the referenced paths are empty.
+# models:
+#   quack_flow:
+#     silver:
+#       +materialized: table
+#       +schema: silver
+#     gold:
+#       +materialized: table
+#       +schema: gold
 
 # Seed configuration. The ticker_repos mapping is the authoritative source
 # for which GitHub repos feed which ticker's Target A signal. Silver/Gold

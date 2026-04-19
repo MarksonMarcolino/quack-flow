@@ -251,6 +251,70 @@ The full verbatim output lives in [`scripts/ollama_hello_output.txt`](scripts/ol
 
 ---
 
+## Build progress
+
+| Weekend | Layer | Status | Evidence |
+|---|---|---|---|
+| 1 | Repo scaffold + Ollama hello-world + README | ✅ Done | `scripts/ollama_hello_output.txt` shows real llama3 run |
+| 2 | Bronze ingestion + dbt seed + DAG skeleton | ✅ Done | See row counts below |
+| 3 | dbt silver + Ollama tracer | — Next | |
+| 4 | dbt gold + training labels + first-run backfill + `/plan-eng-review` audit | — | |
+| 5 | `analysis/correlation.py` + `serving.correlations` + methodology section | — | |
+| 6 | XGBoost baselines + MLflow + SHAP | — | |
+| 7 | Ollama batch explanations | — | |
+| 8 | Streamlit 3-page dashboard | — | |
+| 9 | Deploy (Streamlit Cloud + launchd CRON) | — | |
+| 10 | README case-study polish + CV bullet | — | |
+
+### Weekend 2 evidence
+
+Pipeline end-to-end against fixture data (no live downloads yet — fixtures-first dev):
+
+```
+$ uv run python -m ml.extract_github --date 2026-04-18
+  raw events seen        : 49
+  kept by type filter    : 44   (dropped 5 IssuesEvent/PushEvent/ForkEvent/IssueCommentEvent)
+  kept by repo filter    : 40
+    curated scope        : 28   (all 23 curated repos hit)
+    broad scope (≥5/day) : 12   (trending-repo-a, trending-repo-b)
+  dropped by repo filter : 4    (noise/quiet-repo-{a,b,c}: <5 events/day)
+
+$ uv run python -m ml.extract_finance --start 2026-03-09 --end 2026-04-18
+  rows        : 150             (5 tickers × 30 days)
+  tickers     : AAPL, GOOGL, META, MSFT, QQQ
+
+$ uv run python -m ml.load_bronze --date 2026-04-18
+  reference.ticker_repos : 23 rows (MSFT=4, GOOGL=4, META=4, NVDA=3, AAPL=3, QQQ=5)
+  bronze.github_events   : 40 rows (WatchEvent=25, PullRequestEvent=15)
+  bronze.finance_ohlcv   : 150 rows
+```
+
+Idempotent — re-running `load_bronze` produces identical row counts (`INSERT OR REPLACE` keyed by `event_id` and `(date, ticker)`).
+
+The Airflow DAG in [`dags/etl_pipeline.py`](dags/etl_pipeline.py) covers the full 11-task chain from extraction to serving. Weekend-2 tasks (`extract_github`, `extract_finance`, `load_bronze`) call real callables. Weekend-3+ tasks are `NotImplementedError` stubs with readable "lands in weekend N" messages so an early trigger fails at the exact task, not silently.
+
+### How to run the pipeline locally (fixtures)
+
+```bash
+# one-time: install deps
+uv sync
+ollama pull llama3
+
+# three commands, fixtures-driven:
+uv run python -m ml.extract_github  --date 2026-04-18
+uv run python -m ml.extract_finance --start 2026-03-09 --end 2026-04-18
+uv run python -m ml.load_bronze     --date 2026-04-18
+
+# inspect:
+uv run python -c "from ml.db import get_connection; \
+  con = get_connection(); \
+  print(con.execute('SELECT schema_name FROM information_schema.schemata').fetchall())"
+```
+
+When everything is wired and you want a live run: pass `--source live` to both extract scripts. No other code changes.
+
+---
+
 ## Try it live
 
 Coming weekend 9 — Streamlit Cloud URL will land here.
